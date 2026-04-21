@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple
+  labels:
+    you: me
+  # namespace: project1
+spec:
+  restartPolicy: Never
+  containers:
+    - name: felix-web
+      image: registry.access.redhat.com/ubi9/httpd-24:9.7
+      ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+# status:

@@ -1,0 +1,9 @@
+metadata:
+  name: pod-patch
+spec:
+  containers:
+    - name: felix-web
+      image: registry.access.redhat.com/ubi9/httpd-24:9.7
+
+# oc patch pod edit  --type='json' --patch='[{"op": "replace", "path": "/spec/containers/0/image", "value":"registry.access.redhat.com/ubi9/httpd-24:9.7"}]'
+#  oc patch pod pod-patch --patch-file edit-patch.yml 

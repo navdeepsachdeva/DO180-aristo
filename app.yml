@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: project5
+spec: {}
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aristo-app
+  name: aristo-app
+  namespace: project5
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: aristo-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aristo-app
+    spec:
+      containers:
+      - image: registry.access.redhat.com/ubi9/httpd-24:9.7
+        name: httpd-24
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aristo-app
+  name: aristo-app
+  namespace: project5
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: aristo-app
+status:
+  loadBalancer: {}
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aristo-app
+  name: aristo-app
+  namespace: project5
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: ""
+    name: aristo-app
+    weight: null
+status: {}
+
+# kubectl create namespace project5 --dry-run=client -o yaml
+#  oc create deployment aristo-app  --image registry.access.redhat.com/ubi9/httpd-24:9.7 --port=8080 --replicas=4  --dry-run=client -o yaml >> app.yml
+#  oc expose deployment aristo-app --dry-run=client -o yaml
+#  oc expose service aristo-app --dry-run=client -o yaml

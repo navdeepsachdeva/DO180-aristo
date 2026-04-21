@@ -1,0 +1,130 @@
+# oc new-app --code=https://github.com/navdeepsachdeva/DO180-apps.git --image-stream php:7.4-ubi8 --context-dir=php-helloworld --name=webapp --dry-run -o yaml > webapp.yml
+---
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: webapp
+      app.kubernetes.io/component: webapp
+      app.kubernetes.io/instance: webapp
+      app.kubernetes.io/name: php
+    name: webapp
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: webapp
+      app.kubernetes.io/component: webapp
+      app.kubernetes.io/instance: webapp
+      app.kubernetes.io/name: php
+    name: webapp
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: webapp:latest
+    postCommit: {}
+    resources: {}
+    source:
+      contextDir: php-helloworld
+      git:
+        uri: https://github.com/navdeepsachdeva/DO180-apps.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: php:7.4-ubi8
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: gRU8xlt9Qb07ttPceXkq
+      type: GitHub
+    - generic:
+        secret: JdZj8B5KTEzqyx7hf2LH
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"webapp:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"webapp\")].image"}]'
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: webapp
+      app.kubernetes.io/component: webapp
+      app.kubernetes.io/instance: webapp
+      app.kubernetes.io/name: php
+    name: webapp
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        deployment: webapp
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          deployment: webapp
+      spec:
+        containers:
+        - image: ' '
+          name: webapp
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          resources: {}
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: webapp
+      app.kubernetes.io/component: webapp
+      app.kubernetes.io/instance: webapp
+      app.kubernetes.io/name: php
+    name: webapp
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deployment: webapp
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}

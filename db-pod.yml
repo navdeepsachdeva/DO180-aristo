@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: dbpod
+  name: dbpod
+spec:
+  containers:
+  - env:
+    - name: MYSQL_USER
+      value: marius
+    - name: MYSQL_PASSWORD
+      value: mypa55
+    - name: MYSQL_DATABASE
+      value: aristo
+    - name: MYSQL_ROOT_PASSWORD
+      value: r00tpa55
+    image: registry.fedoraproject.org/f32/mysql
+    name: dbpod
+    ports:
+    - containerPort: 3306
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+# oc run dbpod --restart=Never --env MYSQL_USER=marius --env MYSQL_PASSWORD=mypa55 --env MYSQL_DATABASE=aristo --env MYSQL_ROOT_PASSWORD=r00tpa55 --image registry.fedoraproject.org/f32/mysql --port=3306  --dry-run=client -o yaml

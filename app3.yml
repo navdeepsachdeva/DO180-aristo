@@ -1,0 +1,95 @@
+# oc new-app  --dry-run -o yaml --image=quay.io/navdeep_sachdeva/custom_httpd:1.0 --name=app3  > app3.yml
+
+apiVersion: v1
+kind: List
+metadata: {}
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: app3
+      app.kubernetes.io/component: app3
+      app.kubernetes.io/instance: app3
+    name: app3
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: quay.io/navdeep_sachdeva/custom_httpd:1.0
+      from:
+        kind: DockerImage
+        name: quay.io/navdeep_sachdeva/custom_httpd:1.0
+      generation: null
+      importPolicy:
+        importMode: Legacy
+      name: "1.0"
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"app3:1.0"},"fieldPath":"spec.template.spec.containers[?(@.name==\"app3\")].image"}]'
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: app3
+      app.kubernetes.io/component: app3
+      app.kubernetes.io/instance: app3
+    name: app3
+  spec:
+    replicas: 4
+    selector:
+      matchLabels:
+        deployment: app3
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          deployment: app3
+      spec:
+        containers:
+        - image: ' '
+          name: app3
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          resources: {}
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: app3
+      app.kubernetes.io/component: app3
+      app.kubernetes.io/instance: app3
+    name: app3
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deployment: app3
+  status:
+    loadBalancer: {}
