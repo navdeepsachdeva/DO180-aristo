@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: onetime
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - date +%x-%R;tail -n2 /etc/passwd
+        image: registry.access.redhat.com/ubi9/ubi
+        name: onetime
+        resources: {}
+      restartPolicy: Never
+status: {}
+# oc create job onetime --image registry.access.redhat.com/ubi9/ubi --dry-run=client -o yaml -- /bin/bash -c "date +%x-%R;tail -n2 /etc/passwd"

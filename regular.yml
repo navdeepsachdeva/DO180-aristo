@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  creationTimestamp: null
+  name: regular
+spec:
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      name: regular
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - date +%x-%R;tail -n2 /etc/passwd
+            image: registry.access.redhat.com/ubi9/ubi
+            name: regular
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/1 * * * 1-5'
+status: {}
+# oc create cronjob regular --image registry.access.redhat.com/ubi9/ubi --schedule="*/1 * * * 1-5" --dry-run=client -o yaml -- /bin/bash -c "date +%x-%R;tail -n2 /etc/passwd"  > regular.yml
