@@ -1,0 +1,23 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: null
+  name: aristo-cpu
+spec:
+  maxReplicas: 20
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aristo-app
+status:
+  currentMetrics: null
+  desiredReplicas: 0
+# oc autoscale  deployment/aristo-app --name=aristo_cpu --max 20 --min 1 --cpu-percent 80 --dry-run=client -o yaml

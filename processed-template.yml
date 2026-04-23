@@ -53,7 +53,7 @@ items:
       template: mysql-ephemeral-template
     name: mysql
   spec:
-    replicas: 2
+    replicas: 3
     selector:
       name: mysql
     strategy:

@@ -6,6 +6,7 @@ metadata:
     run: dbpod
   name: dbpod
 spec:
+  
   containers:
   - env:
     - name: MYSQL_USER
@@ -17,6 +18,7 @@ spec:
     - name: MYSQL_ROOT_PASSWORD
       value: r00tpa55
     image: registry.fedoraproject.org/f32/mysql
+    imagePullPolicy: Never
     name: dbpod
     ports:
     - containerPort: 3306
